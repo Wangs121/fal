@@ -156,6 +156,5 @@ struct rt_device *fal_char_device_create(const char *parition_name);
 #ifdef __cplusplus
 }
 #endif
-void fal_test(void);
 
 #endif /* _FAL_H_ */
