@@ -11,7 +11,7 @@
 #ifndef _FAL_H_
 #define _FAL_H_
 
-#include <rtconfig.h>
+// #include <rtconfig.h>
 #include <fal_cfg.h>
 #include "fal_def.h"
 
@@ -156,5 +156,6 @@ struct rt_device *fal_char_device_create(const char *parition_name);
 #ifdef __cplusplus
 }
 #endif
+void fal_test(void);
 
 #endif /* _FAL_H_ */
