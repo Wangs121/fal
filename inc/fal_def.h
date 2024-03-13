@@ -13,37 +13,13 @@
 
 #include <stdint.h>
 #include <stdio.h>
-
-#define FAL_SW_VERSION                 "1.0.0"
-
-#ifdef __RTTHREAD__ /* for RT-Thread platform */
 #include <rtthread.h>
+
 #define FAL_PRINTF      rt_kprintf
 #define FAL_MALLOC      rt_malloc
 #define FAL_CALLOC      rt_calloc
 #define FAL_REALLOC     rt_realloc
 #define FAL_FREE        rt_free
-#endif
-
-#ifndef FAL_MALLOC
-#define FAL_MALLOC                     malloc
-#endif
-
-#ifndef FAL_CALLOC
-#define FAL_CALLOC                     calloc
-#endif
-
-#ifndef FAL_REALLOC
-#define FAL_REALLOC                    realloc
-#endif
-
-#ifndef FAL_FREE
-#define FAL_FREE                       free
-#endif
-
-#ifndef FAL_PRINTF
-#define FAL_PRINTF                     printf
-#endif
 
 #ifndef FAL_DEBUG
 #define FAL_DEBUG                      0
@@ -97,6 +73,16 @@ if (!(EXPR))                                                                   \
 #define FAL_DEV_NAME_MAX 24
 #endif
 
+#ifndef FAL_DEV_BLK_MAX
+#define FAL_DEV_BLK_MAX 6
+#endif
+
+struct flash_blk
+{
+    size_t size;
+    size_t count;
+};
+
 struct fal_flash_dev
 {
     char name[FAL_DEV_NAME_MAX];
@@ -115,10 +101,11 @@ struct fal_flash_dev
         int (*erase)(long offset, size_t size);
     } ops;
 
-    /* write minimum granularity, unit: bit. 
+    /* write minimum granularity, unit: bit.
        1(nor flash)/ 8(stm32f2/f4)/ 32(stm32f1)/ 64(stm32l4)
        0 will not take effect. */
     size_t write_gran;
+    struct flash_blk blocks[FAL_DEV_BLK_MAX];
 };
 typedef struct fal_flash_dev *fal_flash_dev_t;
 
