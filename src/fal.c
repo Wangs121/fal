@@ -60,3 +60,16 @@ int fal_init_check(void)
 {
     return init_ok;
 }
+
+/**
+ * @description: 清空所有扇区
+ * @return {*}
+ */
+void fal_erase_all_partitions(void)
+{
+    size_t len = 0;
+    const struct fal_partition *partions = fal_get_partition_table(&len);
+    for(uint16_t i = 0; i < len; i++) {
+        fal_partition_erase_all(&partions[i]);
+    }
+}
