@@ -2,9 +2,9 @@
  * @Author: Shuai Wang 277668922@qq.com
  * @Date: 2023-12-25 14:15:48
  * @LastEditors: Shuai Wang 277668922@qq.com
- * @LastEditTime: 2024-01-04 09:16:07
- * @FilePath: \stm32f407zet6\APP\FAL\fal_flash_sfud_port.c
- * @Description: 
+ * @LastEditTime: 2024-11-01 11:03:52
+ * @FilePath: \stm32f407zet6\Library\fal\fal_flash_sfud_port.c
+ * @Description:
  */
 /*
  * Copyright (c) 2006-2018, RT-Thread Development Team
@@ -19,12 +19,16 @@
 #include <fal.h>
 #include <sfud.h>
 #include "sfud_cfg.h"
+#include "iwdg.h"
+
+#define WDGREFRESH()              \
+    do {                          \
+        HAL_IWDG_Refresh(&hiwdg); \
+    } while (0)
 
 #define FAL_USING_SFUD_PORT
 #define RT_USING_SFUD
 #ifdef FAL_USING_SFUD_PORT
-
-
 
 static int init(void);
 static int read(long offset, uint8_t *buf, size_t size);
@@ -33,20 +37,19 @@ static int erase(long offset, size_t size);
 
 static sfud_flash_t sfud_dev = NULL;
 struct fal_flash_dev nor_flash0 =
-{
-    .name       = NOR_FLASH_DEV_NAME,
-    .addr       = 0,
-    .len        = 16 * 1024 * 1024,
-    .blk_size   = 4096,
-    .ops        = {init, read, write, erase},
-    .write_gran = 1
-};
+    {
+        .name       = NOR_FLASH_DEV_NAME,
+        .addr       = 0,
+        .len        = 16 * 1024 * 1024,
+        .blk_size   = 4096,
+        .ops        = {init, read, write, erase},
+        .write_gran = 1};
 
 static int init(void)
 {
 
 #ifdef RT_USING_SFUD
-    
+
     // if (sfud_init() == SFUD_SUCCESS) {
     //     // sfud_demo();
     // }
@@ -62,14 +65,13 @@ static int init(void)
     sfud_dev = &flash_table[0];
 #endif
 
-    if (NULL == sfud_dev)
-    {
+    if (NULL == sfud_dev) {
         return -1;
     }
 
     /* update the flash chip information */
     nor_flash0.blk_size = sfud_dev->chip.erase_gran;
-    nor_flash0.len = sfud_dev->chip.capacity;
+    nor_flash0.len      = sfud_dev->chip.capacity;
 
     return 0;
 }
@@ -87,8 +89,7 @@ static int write(long offset, const uint8_t *buf, size_t size)
 {
     assert(sfud_dev);
     assert(sfud_dev->init_ok);
-    if (sfud_write(sfud_dev, nor_flash0.addr + offset, size, buf) != SFUD_SUCCESS)
-    {
+    if (sfud_write(sfud_dev, nor_flash0.addr + offset, size, buf) != SFUD_SUCCESS) {
         return -1;
     }
 
@@ -97,14 +98,13 @@ static int write(long offset, const uint8_t *buf, size_t size)
 
 static int erase(long offset, size_t size)
 {
+    WDGREFRESH();
     assert(sfud_dev);
     assert(sfud_dev->init_ok);
-    if (sfud_erase(sfud_dev, nor_flash0.addr + offset, size) != SFUD_SUCCESS)
-    {
+    if (sfud_erase(sfud_dev, nor_flash0.addr + offset, size) != SFUD_SUCCESS) {
         return -1;
     }
 
     return size;
 }
 #endif /* FAL_USING_SFUD_PORT */
-
