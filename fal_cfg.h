@@ -2,7 +2,7 @@
  * @Author: Shuai Wang 277668922@qq.com
  * @Date: 2023-12-25 14:15:48
  * @LastEditors: Shuai Wang 277668922@qq.com
- * @LastEditTime: 2024-08-05 19:15:18
+ * @LastEditTime: 2025-02-07 13:53:35
  * @FilePath: \stm32f407zet6\Library\fal\fal_cfg.h
  * @Description:
  */
@@ -41,8 +41,9 @@ extern struct fal_flash_dev nor_flash0;
 #define FAL_PART_TABLE                                                                                          \
     {                                                                                                           \
         {FAL_PART_MAGIC_WORD, "Bootloader", ONCHIP_FLASH_DEV_NAME, 0, 0x8000, 0},                               \
-        {FAL_PART_MAGIC_WORD, "App", ONCHIP_FLASH_DEV_NAME, 0x8000, 0xEA000, 0},                                \
-        {FAL_PART_MAGIC_WORD, "Config", ONCHIP_FLASH_DEV_NAME, 0xF2000, 0xE000, 0},                             \
+        {FAL_PART_MAGIC_WORD, "App", ONCHIP_FLASH_DEV_NAME, 0x8000, 0x58000, 0},                                \
+        {FAL_PART_MAGIC_WORD, "FontEN", ONCHIP_FLASH_DEV_NAME, 0x80000, 0x20000, 0},                                \
+        {FAL_PART_MAGIC_WORD, "FontCH", ONCHIP_FLASH_DEV_NAME, 0xA0000, 0x40000, 0},                                \
         {FAL_PART_MAGIC_WORD, "Nor_Boot", NOR_FLASH_DEV_NAME, 0, 8 * 1024, 0},                                  \
         {FAL_PART_MAGIC_WORD, "Nor_Info", NOR_FLASH_DEV_NAME, 8 * 1024, 8 * 1024, 0},                           \
         {FAL_PART_MAGIC_WORD, "Nor_Patient", NOR_FLASH_DEV_NAME, 16 * 1024, 64 * 1024, 0},                      \
